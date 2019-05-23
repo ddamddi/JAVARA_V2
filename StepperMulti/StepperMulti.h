@@ -18,7 +18,7 @@ class StepperMulti
 
   	//'loop()'안에서 이 메소드를 호출해야 한다.
   	void moveStep();
-
+    void speedChange();
   private:
     void stepMotor(int this_step);
 
@@ -39,6 +39,9 @@ class StepperMulti
 
 	//스텝 저장
 	int steps_left;
+
+  int original_steps;
+  long original_speed;
 };
 
 #endif

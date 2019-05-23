@@ -69,6 +69,7 @@ StepperMulti::StepperMulti(int number_of_steps, int motor_pin_1, int motor_pin_2
 */
 void StepperMulti::setSpeed(long whatSpeed)
 {
+  this->original_speed = whatSpeed;
   this->step_delay = 60L * 1000L * 1000L / this->number_of_steps / whatSpeed;
 }
 
@@ -79,6 +80,7 @@ void StepperMulti::setSpeed(long whatSpeed)
 void StepperMulti::setStep(int steps_to_move)
 {
   this->steps_left = abs(steps_to_move);  // how many steps to take
+  this->original_steps = abs(steps_to_move);
 
   // determine direction based on whether steps_to_mode is + or -:
   if (steps_to_move > 0) {this->direction = 1;}
@@ -93,6 +95,7 @@ void StepperMulti::moveStep()
 	//남은 스텝이 있는지?
 	if(this->steps_left > 0)
 	{
+    speedChange();
     unsigned long now = micros();
 		// move only if the appropriate delay has passed:
 		if (now - this->last_step_time >= this->step_delay)
@@ -179,4 +182,22 @@ void StepperMulti::stepMotor(int thisStep)
       break;
     }
   }
+}
+
+void StepperMulti::speedChange(){
+  int smallStep = 300;  //about 30 degree
+  long smallSpeed = 0;
+
+  if(this->steps_left < smallStep){
+    smallSpeed = (long)( (this->steps_left / 100 ) + 4);
+    this->step_delay = 60L * 1000L * 1000L / this->number_of_steps / smallSpeed;
+  }
+  else if( (this->steps_left * 1.0 / this->original_steps) >= 0.75){
+    smallSpeed = (long)( (  (this->original_steps - this->steps_left) / 100 ) + 4);
+    this->step_delay = 60L * 1000L * 1000L / this->number_of_steps / smallSpeed;
+  }
+  else{
+    this->step_delay = 60L * 1000L * 1000L / this->number_of_steps / this->original_speed;
+  }
+
 }
