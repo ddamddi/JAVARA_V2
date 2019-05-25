@@ -49,11 +49,12 @@ def main(args):
     # Initialize head pose detection
     hpd = HPD(args["landmark_type"], args["landmark_predictor"])
 
-    #xy_arduino = serial.Serial('/dev/ttyUSB6', 9600)
-    pm_arduino = serial.Serial('/dev/ttyUSB3',9600)
-    #first_arduino = serial.Serial('/dev/ttyUSB5', 9600)
+    xy_arduino = serial.Serial('/dev/ttyUSB1', 9600)
+    pm_arduino = serial.Serial('/dev/ttyUSB0',9600)
+    first_arduino = serial.Serial('/dev/ttyUSB2', 9600)
     
-    servo_angle = 90
+    time.sleep(0.5)
+    servo_angle = 0
     #count = 0
 
     cv2.namedWindow('frame2', cv2.WINDOW_NORMAL)
@@ -126,7 +127,8 @@ def main(args):
                     
                     # user up (+y) ->    -second_angle
                     # user down (-y) ->    +second_angle
-                    '''
+                    
+                    
                     second_angle = -ty
                     third_angle = ty
                     
@@ -135,24 +137,25 @@ def main(args):
                     xy_arduino.write(second_third_angle)
                     print("second_angle: ", second_third_angle)
                     
-                    '''
+                    
                     
                     '''
-                    trash_angle = 0
-                    first_angle = str(int(tx)) + delimiter + str(int(trash_angle))
+                    first_angle = str(int(-tx))
                     first_angle = first_angle.encode('utf-8')
                     first_arduino.write(first_angle)
                     
                     print("first_angle: ", first_angle)
                     '''
                     
+                    '''
                     fourth_angle = -ty
                     fifth_angle = 0
-                    fourth_fifth_angle = str(int(fouth_angle)) + delimiter + str(int(fifth_angle))
+                    fourth_fifth_angle = str(int(fourth_angle)) + delimiter + str(int(fifth_angle))
                     fourth_fifth_angle = fourth_fifth_angle.encode('utf-8')
                     
-                    pm_arduino.write()
-                    
+                    print('fourth_fifth_angle', fourth_fifth_angle)
+                    pm_arduino.write(fourth_fifth_angle)
+                    '''
                     time.sleep(3)
                     # write XY angle
                     # xy_arduino.write(xy_angle)
@@ -163,7 +166,7 @@ def main(args):
                     
                     
                     
-                    cv2.imwrite('detected/%d.jpg' % img_num, frameOut)
+                    #cv2.imwrite('detected/%d.jpg' % img_num, frameOut)
                     img_num += 1
             
             else:
