@@ -22,9 +22,10 @@ delimiter = "/"
 RESIZE_RATIO = 1.4 
 SKIP_FRAMES = 3 
 JAVARA_TERMINATE = False
+hpd = None
 
 def main(args) :
-
+    global JAVARA_TERMINATE
     inches = 0
     port = 1
 
@@ -49,7 +50,7 @@ def main(args) :
             inches = data[1:]
     
             JAVARA_TERMINATE = False
-            t1 = threading.Thread(target=tracking , args= (inches,))
+            t1 = threading.Thread(target=tracking , args= args)
             t1.daemon = True
             t1.start()
         
@@ -60,14 +61,15 @@ def main(args) :
     server_socket.close()                      
 
 def tracking(args):
+    global JAVARA_TERMINATE
+    global hpd
     filename = args["input_file"]  
     img_num = 0
 
     if filename is None:
-        isVideo = False
-        
         # created a *threaded *video stream, allow the camera sensor to warmup,
         # and start the FPS counter
+        isVideo = False
         print("[INFO] sampling THREADED frames from `picamera` module...")
         vs = PiVideoStream().start()
         time.sleep(2.0)
@@ -83,8 +85,10 @@ def tracking(args):
         name, ext = osp.splitext(filename)
         out = cv2.VideoWriter(args["output_file"], fourcc, fps, (width, height))
 
-    # Initialize head pose detection
-    hpd = HPD(args["landmark_type"], args["landmark_predictor"])
+    if hpd == None : 
+        # Initialize head pose detection
+        print("[INFO] Initialize Head Pose Detection model...")
+        hpd = HPD(args["landmark_type"], args["landmark_predictor"])
 
     xy_arduino = serial.Serial('/dev/ttyUSB1', 9600)
     pm_arduino = serial.Serial('/dev/ttyUSB0',9600)
@@ -92,11 +96,9 @@ def tracking(args):
     
     time.sleep(0.5)
     servo_angle = 0
-    #count = 0
 
     cv2.namedWindow('frame2', cv2.WINDOW_NORMAL)
     cv2.resizeWindow('frame2', 320, 240)
-
     
     while(vs.stopped == False):
         # Capture frame-by-frame
