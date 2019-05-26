@@ -10,6 +10,8 @@ import time
 import cv2
 import numpy as np
 import os.path as osp
+import os
+import threading
 import serial
 import math
 from hpd import HPD
@@ -19,10 +21,45 @@ default_xAngle = 60
 delimiter = "/"
 RESIZE_RATIO = 1.4 
 SKIP_FRAMES = 3 
+JAVARA_TERMINATE = False
 
-                           
+def main(args) :
 
-def main(args):
+    inches = 0
+    port = 1
+
+    server_socket=bluetooth.BluetoothSocket( bluetooth.RFCOMM ) 
+    server_socket.bind(("",port))
+    server_socket.listen(1)
+
+    client_socket,address = server_socket.accept()
+    print("Accepted connection from ",address)
+
+    while True:
+        data = client_socket.recv(1024)
+        print("Received: %s" % data)
+        # MESSAGE FORMAT : s(start) or q(quit)|inches|
+
+        if data[0] == "q":
+            print ("JAVARA STOP !!")
+            JAVARA_TERMINATE = True   
+
+        if data[0] == "s":
+            print("JAVARA START !!")
+            inches = data[1:]
+    
+            JAVARA_TERMINATE = False
+            t1 = threading.Thread(target=tracking , args= (inches,))
+            t1.daemon = True
+            t1.start()
+        
+        if data[0] == "Q" :
+            break
+ 
+    client_socket.close()
+    server_socket.close()                      
+
+def tracking(args):
     filename = args["input_file"]  
     img_num = 0
 
@@ -180,8 +217,9 @@ def main(args):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-##        count += 1
-        
+            if JAVARA_TERMINATE == TRUE:
+                break
+
         fps.update()
 
     # When everything done, release the capture
