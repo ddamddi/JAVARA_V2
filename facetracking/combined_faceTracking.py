@@ -1,9 +1,11 @@
 # import the necessary packages
+
 from __future__ import print_function
 from imutils.video.pivideostream import PiVideoStream
 from imutils.video import FPS
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+import bluetooth
 import argparse
 import imutils
 import time
@@ -40,17 +42,19 @@ def main(args) :
         data = client_socket.recv(1024)
         print("Received: %s" % data)
         # MESSAGE FORMAT : s(start) or q(quit)|inches|
-
+        
+        data = data.decode('utf-8')
+        
         if data[0] == "q":
             print ("JAVARA STOP !!")
-            JAVARA_TERMINATE = True   
+            JAVARA_TERMINATE = True
 
         if data[0] == "s":
             print("JAVARA START !!")
             inches = data[1:]
-    
+
             JAVARA_TERMINATE = False
-            t1 = threading.Thread(target=tracking , args= (args,))
+            t1 = threading.Thread(target=tracking, args=(args,))
             t1.daemon = True
             t1.start()
         
@@ -61,15 +65,16 @@ def main(args) :
     server_socket.close()                      
 
 def tracking(args):
-    global JAVARA_TERMINATE
     global hpd
+    global JAVARA_TERMINATE
     filename = args["input_file"]  
     img_num = 0
 
     if filename is None:
+        isVideo = False
+        
         # created a *threaded *video stream, allow the camera sensor to warmup,
         # and start the FPS counter
-        isVideo = False
         print("[INFO] sampling THREADED frames from `picamera` module...")
         vs = PiVideoStream().start()
         time.sleep(2.0)
@@ -85,20 +90,22 @@ def tracking(args):
         name, ext = osp.splitext(filename)
         out = cv2.VideoWriter(args["output_file"], fourcc, fps, (width, height))
 
-    if hpd == None : 
-        # Initialize head pose detection
-        print("[INFO] Initialize Head Pose Detection model...")
+    # Initialize head pose detection
+    if(hpd == None):
+        print("[INFO] initialize HPD Model...")
         hpd = HPD(args["landmark_type"], args["landmark_predictor"])
 
-    xy_arduino = serial.Serial('/dev/ttyUSB1', 9600)
-    pm_arduino = serial.Serial('/dev/ttyUSB0',9600)
-    first_arduino = serial.Serial('/dev/ttyUSB2', 9600)
+    xy_arduino = serial.Serial('/dev/ttyUSB2', 9600)
+    pm_arduino = serial.Serial('/dev/ttyUSB1',9600)
+    first_arduino = serial.Serial('/dev/ttyUSB0', 9600)
     
     time.sleep(0.5)
     servo_angle = 0
+    #count = 0
 
     cv2.namedWindow('frame2', cv2.WINDOW_NORMAL)
     cv2.resizeWindow('frame2', 320, 240)
+
     
     while(vs.stopped == False):
         # Capture frame-by-frame
@@ -219,7 +226,7 @@ def tracking(args):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-            if JAVARA_TERMINATE == TRUE:
+            if JAVARA_TERMINATE == True:
                 break
 
         fps.update()
@@ -250,5 +257,4 @@ if __name__ == '__main__':
 	help="Whether or not frames should be displayed")
     args = vars(parser.parse_args())
     main(args)
-
 
