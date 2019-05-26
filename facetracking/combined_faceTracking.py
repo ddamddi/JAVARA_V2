@@ -50,7 +50,7 @@ def main(args) :
             inches = data[1:]
     
             JAVARA_TERMINATE = False
-            t1 = threading.Thread(target=tracking , args= args)
+            t1 = threading.Thread(target=tracking , args= (args,))
             t1.daemon = True
             t1.start()
         
