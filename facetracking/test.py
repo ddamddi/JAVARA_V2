@@ -68,11 +68,14 @@ def main(args) :
 def tracking(args, inches):
     global hpd
     global JAVARA_TERMINATE
+    global no_detect_flag
     
-    filename = args["input_file"]  
-
-    print(inches)
+    filename = args["input_file"]
+    inches = 5.7
+    default_zAngle = inches * 2.54 * 4 + 4
+    
     img_num = 0
+
 
     if filename is None:
         isVideo = False
@@ -81,7 +84,7 @@ def tracking(args, inches):
         # and start the FPS counter
         print("[INFO] sampling THREADED frames from `picamera` module...")
         vs = PiVideoStream().start()
-        time.sleep(2.0)
+        #time.sleep(1.0)
         fps = FPS().start()
         
     else:
@@ -95,17 +98,13 @@ def tracking(args, inches):
         out = cv2.VideoWriter(args["output_file"], fourcc, fps, (width, height))
 
     # Initialize head pose detection
-    if(hpd == None):
-        print("[INFO] initialize HPD Model...")
-        hpd = HPD(args["landmark_type"], args["landmark_predictor"])
+    hpd = HPD(args["landmark_type"], args["landmark_predictor"])
 
-    #xy_arduino = serial.Serial('/dev/ttyUSB1', 9600)
-    #pm_arduino = serial.Serial('/dev/ttyUSB0',9600)
-    #first_arduino = serial.Serial('/dev/ttyACM0', 9600)
+    xy_arduino = serial.Serial('/dev/ttyUSB1', 115200)
+    pm_arduino = serial.Serial('/dev/ttyUSB0',115200)
+    first_arduino = serial.Serial('/dev/ttyACM0', 115200)
     
     time.sleep(0.5)
-    servo_angle = 0
-    #count = 0
 
     cv2.namedWindow('frame2', cv2.WINDOW_NORMAL)
     cv2.resizeWindow('frame2', 320, 240)
@@ -140,38 +139,38 @@ def tracking(args, inches):
                     print('\rframe2: %d' % fps._numFrames, end='')        
                     print(" There is no face detected\n")
                     
+                    
+                    # face detecting!!
+                    fifth_angle = 0
+                    
+                    if no_detect_flag == 0:
+                        fourth_angle = -10
+                        no_detect_flag += 1
+                    elif no_detect_flag == 1:
+                        fourth_angle = 23
+                        no_detect_flag += 1
+                    elif no_detect_flag == 2:
+                        fourth_angle = -10
+                        no_detect_flag = 0 
+                        
+                    fourth_fifth_angle = str(int(fourth_angle)) + delimiter + str(int(fifth_angle))
+                    fourth_fifth_angle = fourth_fifth_angle.encode('utf-8')
+                    print('fourth_fifth_angle', fourth_fifth_angle)
+                    pm_arduino.write(fourth_fifth_angle)
+                    
+                    time.sleep(2.5)
                     fps.update()
-                    #count += 1
                     continue
                     
                 else:
+                    # tvec: transpose vector
+                    # tx : left(+tx) & right(-tx)
+                    # ty : up(+ty) & down(-ty)
+                    # tz : far(bit tz value) & close(small tz value) :: -tz value
                     tx, ty, tz = tvec[:, 0]
                     rx, ry, rz = angles
-
-
-                    th = math.radians(servo_angle)
-                    # xy angle
-                    # tz: : x angle, tx: y angle
-                    temp_z = int(tz) + default_xAngle   #temp_z: x angle
-                    
-                    x_angle = math.sin(th)*temp_z + math.cos(th)*tx
-                    y_angle = math.cos(th)*temp_z + math.sin(th)*tx
-                    
-                    temp_y = int(ty)
-                    z_angle = str(temp_y)
-                    
-                    z_angle = z_angle.encode('utf-8')
-                    ry = int(ry)
-                    
-                    if (abs(ry) <=15):
-                        ry=0
-                        
-                    
-                    print("\ntx: ",tx, "\nty: ", ty,"\ntz: ", tz)
-                    
-                    
-                    print("\n\n\nry: ", ry)
-                    
+                
+                
                     ################
                     #### before ####
                     ################
@@ -196,27 +195,24 @@ def tracking(args, inches):
                     # user go left(tx) -> first_angle
                     # user go right(tx) -> first_angle
                     
-                    
+                    '''
                     first_angle = str(int(-tx))
                     first_angle = first_angle.encode('utf-8')
-                    #first_arduino.write(first_angle)
+                    first_arduino.write(first_angle)
                     
                     print("first_angle: ", first_angle)
                     
-                    
+                    '''
                     third_angle = ty
                     second_angle = default_zAngle + tz
                     if abs(second_angle) <= 4:
                         second_angle = 0
                     
-                    if second_angle >= 20:
-                        second_angle = 20
-                    elif: second_angle <= -20:
-                        second_angle = -20
                         
                     second_third_angle = str(int(third_angle)) + delimiter + str(int(second_angle))
                     second_third_angle = second_third_angle.encode('utf-8')
-                    #xy_arduino.write(second_third_angle)
+                    xy_arduino.write(second_third_angle)
+                    print('')
                     print("second_angle: ", second_third_angle)
                     
                     
@@ -224,16 +220,33 @@ def tracking(args, inches):
                     fourth_angle = -ty
                     fifth_angle = 0
                     
-                    
+                    if second_angle >= 20 and second_angle < 25:
+                        fourth_angle = 10
+                    elif second_angle <= -20 and second_angle > -25:
+                        fourth_angle = -10
+                    elif second_angle >= 25 and second_angle < 30:
+                        fourth_angle = 13
+                    elif second_angle <= -25 and second_angle > -30:    
+                        fourth_angle = -13
+                    elif second_angle >= 30 and second_angle < 35:
+                        fourth_angle = 16
+                    elif second_angle <= -30 and second_angle > -35:    
+                        fourth_angle = -16
+                    elif second_angle >= 35:
+                        fourth_angle = 19
+                    elif second_angle <= -35:    
+                        fourth_angle = -19
                         
+                    
+                    
                     fourth_fifth_angle = str(int(fourth_angle)) + delimiter + str(int(fifth_angle))
                     fourth_fifth_angle = fourth_fifth_angle.encode('utf-8')
                     
                     print('fourth_fifth_angle', fourth_fifth_angle)
-                    #pm_arduino.write(fourth_fifth_angle)
+                    pm_arduino.write(fourth_fifth_angle)
                     
                     
-                    time.sleep(3)
+                    time.sleep(2)
                     img_num += 1
             
             else:
@@ -247,9 +260,8 @@ def tracking(args, inches):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-            if JAVARA_TERMINATE == True:
-                break
-
+##        count += 1
+        
         fps.update()
 
     # When everything done, release the capture
