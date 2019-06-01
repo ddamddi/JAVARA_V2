@@ -18,19 +18,20 @@ import serial
 import math
 from hpd import HPD
 
+RESIZE_RATIO = 1.4 
+SKIP_FRAMES = 3 
+JAVARA_TERMINATE = False
+HPD_INIT = False
+
 default_xAngle = 60
 default_zAngle = 60
 delimiter = "/"
-RESIZE_RATIO = 1.4 
-SKIP_FRAMES = 3 
 no_detect_flag = 0
-JAVARA_TERMINATE = False
 hpd = None
-                           
 
-def main(args) :
-    global JAVARA_TERMINATE
-    
+                           
+def main(args):
+    global JAVARA_TERMINATE  
     inches = 0
     port = 1
 
@@ -41,12 +42,15 @@ def main(args) :
     client_socket,address = server_socket.accept()
     print("Accepted connection from ",address)
 
+    t0 = threading.Thread(target=initialize, args=(args,))
+    t0.daemon = True
+    t0.start()
+
     while True:
         data = client_socket.recv(1024)
+        data = data.decode('utf-8')
         print("Received: %s" % data)
         # MESSAGE FORMAT : s(start) or q(quit)|inches|
-        
-        data = data.decode('utf-8')
         
         if data[0] == "q":
             print ("JAVARA STOP !!")
@@ -57,7 +61,7 @@ def main(args) :
             inches = data[1:]
 
             JAVARA_TERMINATE = False
-            t1 = threading.Thread(target=tracking, args=(args,))
+            t1 = threading.Thread(target=tracking, args=(args, inches))
             t1.daemon = True
             t1.start()
         
@@ -67,13 +71,13 @@ def main(args) :
     client_socket.close()
     server_socket.close()                      
 
-def tracking(args):
+def tracking(args, inches):
     global hpd
-    global JAVARA_TERMINATE
     global no_detect_flag
+    global JAVARA_TERMINATE
+    global HPD_INIT
     
     filename = args["input_file"]  
-
     img_num = 0
 
     if filename is None:
@@ -97,9 +101,17 @@ def tracking(args):
         out = cv2.VideoWriter(args["output_file"], fourcc, fps, (width, height))
 
     # Initialize head pose detection
-    if(hpd == None):
-        print("[INFO] initialize HPD Model...")
-        hpd = HPD(args["landmark_type"], args["landmark_predictor"])
+    # if(hpd == None):
+    #     print("[INFO] initialize HPD Model...")
+    #     hpd = HPD(args["landmark_type"], args["landmark_predictor"])
+
+    init_cnt = 0
+    while HPD_INIT == False:
+        print('.', end='')
+        sleep(1)
+        init_cnt += 1
+        if init_cnt % 20 == 19:
+            print('')
 
     xy_arduino = serial.Serial('/dev/ttyUSB1', 115200)
     pm_arduino = serial.Serial('/dev/ttyUSB0',115200)
@@ -254,6 +266,8 @@ def tracking(args):
                 pass
 
 
+            # elapsed_time = time.time() - start_time
+            # cv2.putText(frameOut, "FPS: {:.2f}".format(1 / elapsed_time), ((int)(frameOut.shape[0]/2) - 100,(int)(frameOut.shape[1]/2) - 100),cv2.FONT_HERSHEY_DUPLEX, fontScale=0.6, color=(0,0,255), thickness = 2)
             # Display the resulting frame
             # elapsed_time = time.time() - start_time
             # cv2.putText(frameOut, "FPS: {:.2f}".format(1 / elapsed_time), ((int)(frameOut.shape[0]/2) - 100,(int)(frameOut.shape[1]/2) - 100),cv2.FONT_HERSHEY_DUPLEX, fontScale=0.6, color=(0,0,255), thickness = 2)
@@ -264,7 +278,7 @@ def tracking(args):
             if JAVARA_TERMINATE == True:
                 break
 
-##        count += 1
+            #count += 1
         
         fps.update()
 
@@ -279,7 +293,15 @@ def tracking(args):
     vs.stop()
     if isVideo: out.release()
     cv2.destroyAllWindows()
-    
+
+def initialize(args):
+    global hpd
+    global HPD_INIT
+    if hpd = None :
+        print("[INFO] initialize HPD Model...")
+        hpd = HPD(args["landmark_type"], args["landmark_predictor"])
+        print("[INFO] HPD Model initialization finish...")
+        HPD_INIT = True
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -294,4 +316,3 @@ if __name__ == '__main__':
 	help="Whether or not frames should be displayed")
     args = vars(parser.parse_args())
     main(args)
-
