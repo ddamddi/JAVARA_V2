@@ -1,8 +1,11 @@
-#include <StepperMulti.h>
+#include <StepperMulti3.h>
 
 const int STEPS = 2048;
+
 StepperMulti stepper(STEPS, 8,9,10,11);  //y axis
 StepperMulti stepper2(STEPS, 4,5,6,7); //x axis
+
+
 String sCopy ="";
 
 char xSignal = '0';
@@ -26,8 +29,8 @@ void loop(){
    int nCount = 0;
    int nGetIndex = 0 ;
 
-     String sTemp_x = "";   
-     String sTemp_y="";
+   String sTemp_x = "";
+   String sTemp_y="";
 
 
      //String으로 변환
@@ -49,12 +52,11 @@ void loop(){
          sTemp_x = sCopy.substring(0, nGetIndex);
     
          //뺀 데이터 만큼 잘라낸다.
-
          sTemp_y = sCopy.substring(nGetIndex + 1);
       }
     
-      moveXYstep(sTemp_x, leng, 9, X);
-      moveXYstep(sTemp_y, leng, 7, Y);
+      moveXYstep(sTemp_x, leng, 1, X);
+      moveXYstep(sTemp_y, leng, 2, Y);
   }
 
   //다시 값 전달 받기 전에 str 초기화
@@ -67,7 +69,6 @@ void loop(){
 void moveXYstep(String temp, int leng, int multiply, char axis) {
     int flag; //flag =0 일때 +각도 flag=1일때 -각도
     int angle = 0;
-    int small_angle = 40;
     
     if(temp.substring(0,1).equals("-")){
         flag=1;
@@ -79,22 +80,11 @@ void moveXYstep(String temp, int leng, int multiply, char axis) {
     }
     
     //string을 int형으로 변
-    if( angle > 3){
+    if( angle > 4){
       //step수에 맞게 변환
       angle= angle * multiply;
       angle = map(angle,0,360,0,2048);
-      small_angle = map(small_angle, 0,360,0,2048);
-      /*
-       if( angle <= small_angle){
-          if(axis == 'Y')
-          {
-           stepper.setSpeed(4);
-          }
-          else{
-            stepper2.setSpeed(4);
-          }
-       }
-      */
+
       if(flag == 0){
           if(axis == 'Y')
           stepper.setStep(-angle);

@@ -1,13 +1,13 @@
-#include <StepperMulti3.h>
+#include <Stepper.h>
 
 const int STEPS = 2048;
-StepperMulti stepper(STEPS, 8,9,10,11);
+Stepper stepper(STEPS, 8,9,10,11);
 String str="";
 
 void setup()
 {
   stepper.setSpeed(8);
-  Serial.begin(115200);
+  Serial.begin(9600);
 }
 
 void loop()
@@ -44,15 +44,15 @@ void loop()
     
       if(flag == 0){
         //angle만큼 정회전
-        stepper.setStep(-angle);
+        stepper.step(-angle);
       }
       else if(flag == 1){
-        stepper.setStep(angle);
+        stepper.step(angle);
       }
     }
+    delay(500);    
   }
 
-  stepper.moveStep();
   //다시 값 전달 받기 전에 str 초기화
   str="";
 }

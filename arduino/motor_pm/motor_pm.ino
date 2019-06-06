@@ -1,4 +1,4 @@
-#include <StepperMulti.h>
+#include <StepperMulti3.h>
 
 const int STEPS = 2048;
 StepperMulti stepper(STEPS, 8,9,10,11);  //y axis
@@ -11,9 +11,9 @@ char X = 'X';
 char Y = 'Y';
 
 void setup(){
-  stepper.setSpeed(8);
+  stepper.setSpeed(6);
   stepper2.setSpeed(8);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop(){
@@ -53,8 +53,8 @@ void loop(){
          sTemp_y = sCopy.substring(nGetIndex + 1);
       }
     
-      moveXYstep(sTemp_x, leng, 13, X);
-      moveXYstep(sTemp_y, leng, 13, Y);
+      moveXYstep(sTemp_x, leng, 2, X);
+      moveXYstep(sTemp_y, leng, 2, Y);
   }
 
   //다시 값 전달 받기 전에 str 초기화
@@ -79,32 +79,27 @@ void moveXYstep(String temp, int leng, int multiply, char axis) {
     }
     
     //string을 int형으로 변
-    if( angle > 3){
+    if( angle > 4){
       //step수에 맞게 변환
       angle= angle * multiply;
+      
+      // Float to Int
+      String strValue = String(angle);
+      angle = strValue.toInt();
+      
       angle = map(angle,0,360,0,2048);
       small_angle = map(small_angle, 0,360,0,2048);
-      /*
-       if( angle <= small_angle){
-          if(axis == 'Y')
-          {
-           stepper.setSpeed(4);
-          }
-          else{
-            stepper2.setSpeed(4);
-          }
-       }
-      */
+
       if(flag == 0){
           if(axis == 'Y')
-          stepper.setStep(-angle);
+          stepper.setStep(angle);
         else if (axis == 'X'){
           stepper2.setStep(angle);  
         }
       }
       else if(flag == 1){
           if(axis == 'Y'){
-          stepper.setStep(angle);
+          stepper.setStep(-angle);
         }
         else if (axis =='X')
           stepper2.setStep(-angle);

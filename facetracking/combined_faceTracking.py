@@ -41,11 +41,11 @@ def main(args):
 
     client_socket,address = server_socket.accept()
     print("Accepted connection from ",address)
-
+    
     t0 = threading.Thread(target=initialize, args=(args,))
     t0.daemon = True
     t0.start()
-
+    
     while True:
         data = client_socket.recv(1024)
         data = data.decode('utf-8')
@@ -77,7 +77,13 @@ def tracking(args, inches):
     global JAVARA_TERMINATE
     global HPD_INIT
     
-    filename = args["input_file"]  
+    filename = args["input_file"]
+
+    inches = float(inches)
+    if inches >= 8:
+        inches = 8
+        
+    default_zAngle = inches * 2.54 * 4 + 4
     img_num = 0
 
     if filename is None:
@@ -105,17 +111,18 @@ def tracking(args, inches):
     #     print("[INFO] initialize HPD Model...")
     #     hpd = HPD(args["landmark_type"], args["landmark_predictor"])
 
+    '''
     init_cnt = 0
     while HPD_INIT == False:
         print('.', end='')
-        sleep(1)
+        sleep(1)    
         init_cnt += 1
         if init_cnt % 20 == 19:
             print('')
-
-    xy_arduino = serial.Serial('/dev/ttyUSB1', 115200)
-    pm_arduino = serial.Serial('/dev/ttyUSB0',115200)
-    first_arduino = serial.Serial('/dev/ttyACM1', 115200)
+    '''
+    pm2_arduino = serial.Serial('/dev/ttyUSB0', 115200)    # motor 2,4
+    first_arduino = serial.Serial('/dev/ttyACM0', 115200) # motor 1
+    third_arduino = serial.Serial('/dev/ttyUSB1', 115200) # motor 3
     
     time.sleep(0.5)
 
@@ -135,7 +142,7 @@ def tracking(args, inches):
         frame_small = cv2.resize(frame, (new_w, new_h))
         frame_small2 = cv2.flip(frame_small, 1) #
         frame_small3 = cv2.flip(frame_small, 0) # 
-
+        frameOut = frame_small3.copy()
         
         if isVideo:
 
@@ -146,7 +153,7 @@ def tracking(args, inches):
 
         else:
 
-            if (fps._numFrames % SKIP_FRAMES == 0):               
+            if (fps._numFrames % SKIP_FRAMES == 0 and HPD_INIT == True):               
                 frameOut, angles, tvec = hpd.processImage(frame_small3)
                 if tvec==None:
                     print('\rframe2: %d' % fps._numFrames, end='')        
@@ -154,24 +161,26 @@ def tracking(args, inches):
                     
                     
                     # face detecting!!
-                    fifth_angle = 0
-                    
+                    second_angle = 0
                     if no_detect_flag == 0:
                         fourth_angle = -10
                         no_detect_flag += 1
                     elif no_detect_flag == 1:
-                        fourth_angle = 23
-                        no_detect_flag += 1
-                    elif no_detect_flag == 2:
                         fourth_angle = -10
-                        no_detect_flag = 0 
-                        
-                    fourth_fifth_angle = str(int(fourth_angle)) + delimiter + str(int(fifth_angle))
-                    fourth_fifth_angle = fourth_fifth_angle.encode('utf-8')
-                    print('fourth_fifth_angle', fourth_fifth_angle)
-                    pm_arduino.write(fourth_fifth_angle)
+                        no_detect_flag += 1    
+                    elif no_detect_flag == 2:
+                        fourth_angle = 30
+                        no_detect_flag = 0
+                
+                    
+                    pm_second_angle = str(int(fourth_angle)) + delimiter + str(int(second_angle))
+                    pm_second_angle = pm_second_angle.encode('utf-8')
+                    pm2_arduino.write(pm_second_angle)
+
+                    print('fourth_angle', pm_second_angle)
                     
                     time.sleep(2.5)
+                    
                     fps.update()
                     continue
                     
@@ -208,31 +217,38 @@ def tracking(args, inches):
                     # user go left(tx) -> first_angle
                     # user go right(tx) -> first_angle
                     
-                    '''
                     first_angle = str(int(-tx))
+                        
                     first_angle = first_angle.encode('utf-8')
-                    first_arduino.write(first_angle)
                     
                     print("first_angle: ", first_angle)
                     
-                    '''
-                    third_angle = ty
+                    
+                    third_angle = -ty
                     second_angle = default_zAngle + tz
                     if abs(second_angle) <= 4:
                         second_angle = 0
                     
+                    if second_angle >= 20:
+                        second_angle = 20
+                    elif second_angle <= -20:
+                        second_angle = -20
                         
-                    second_third_angle = str(int(third_angle)) + delimiter + str(int(second_angle))
-                    second_third_angle = second_third_angle.encode('utf-8')
-                    xy_arduino.write(second_third_angle)
-                    print('')
-                    print("second_angle: ", second_third_angle)
+                        
+                    '''
+                    if abs(third_angle) <=4: 
+                        third_angle = 0
+					'''
                     
-                    
+					# move third motor
+                    third_angle = str(int(third_angle))
+                    third_angle = third_angle.encode('utf-8')
+                    print('third angle: ',third_angle)
+                    third_arduino.write(third_angle)
                     
                     fourth_angle = -ty
-                    fifth_angle = 0
                     
+                    '''
                     if second_angle >= 20 and second_angle < 25:
                         fourth_angle = 10
                     elif second_angle <= -20 and second_angle > -25:
@@ -249,15 +265,32 @@ def tracking(args, inches):
                         fourth_angle = 19
                     elif second_angle <= -35:    
                         fourth_angle = -19
+                    '''
+                    
+                    if second_angle >= 20 and second_angle < 25:
+                        fourth_angle = 13
+                    elif second_angle <= -20 and second_angle > -25:
+                        fourth_angle = -10
+                    elif second_angle >= 25 and second_angle < 30:
+                        fourth_angle = 16
+                    elif second_angle <= -25 and second_angle > -30:    
+                        fourth_angle = -13
+                    elif second_angle >= 30 and second_angle < 35:
+                        fourth_angle = 19
+                    elif second_angle <= -30 and second_angle > -35:    
+                        fourth_angle = -16
+                    elif second_angle >= 35:
+                        fourth_angle = 20
+                    elif second_angle <= -35:    
+                        fourth_angle = -19
                         
+                    pm_second_angle = str(int(fourth_angle)) + delimiter + str(int(second_angle))
+                    pm_second_angle = pm_second_angle.encode('utf-8')
                     
+                    print('fourth_second_angle', pm_second_angle)
                     
-                    fourth_fifth_angle = str(int(fourth_angle)) + delimiter + str(int(fifth_angle))
-                    fourth_fifth_angle = fourth_fifth_angle.encode('utf-8')
-                    
-                    print('fourth_fifth_angle', fourth_fifth_angle)
-                    pm_arduino.write(fourth_fifth_angle)
-                    
+                    first_arduino.write(first_angle)
+                    pm2_arduino.write(pm_second_angle)
                     
                     time.sleep(2)
                     img_num += 1
@@ -297,9 +330,10 @@ def tracking(args, inches):
 def initialize(args):
     global hpd
     global HPD_INIT
-    if hpd = None :
+    if hpd == None :
         print("[INFO] initialize HPD Model...")
         hpd = HPD(args["landmark_type"], args["landmark_predictor"])
+        time.sleep(10)
         print("[INFO] HPD Model initialization finish...")
         HPD_INIT = True
 

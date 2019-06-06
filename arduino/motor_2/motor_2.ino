@@ -7,7 +7,7 @@ String str="";
 void setup()
 {
   stepper.setSpeed(8);
-  Serial.begin(115200);
+  Serial.begin(9600);
 }
 
 void loop()
@@ -17,7 +17,7 @@ void loop()
     byte leng = Serial.readBytes(temp,4); //byte형태로 받아서 temp저장, 크기 반환
     int flag=0; //flag =0 일때 +각도 flag=1일때 -각도
     int i = 0;
-    int multiply = 3;
+    int multiply = 1;
     int angle = 0;
     
     if(temp[0] == '-'){
@@ -50,6 +50,7 @@ void loop()
         stepper.setStep(angle);
       }
     }
+//    delay(300);
   }
 
   stepper.moveStep();
