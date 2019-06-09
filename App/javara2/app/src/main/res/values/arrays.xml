@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="OS">
+        <item>Android</item>
+        <item>IOS</item>
+        <item>BlackBerry</item>
+        <item>Windows</item>
+        <item>etc</item>
+    </string-array>
+
+    <string-array name="IOS">
+        <item>Apple iPad 1 (9.7\")</item>
+        <item>Apple iPad 2 (9.7\")</item>
+        <item>Apple iPad 3 (9.7\")</item>
+        <item>Apple iPad 4 (9.7\")</item>
+        <item>Apple iPad 5 (9.7\")</item>
+        <item>Apple iPad 6 (9.7\")</item>
+        <item>Apple iPad Air (9.7\")</item>
+        <item>Apple iPad Air 2 (9.7\")</item>
+        <item>Apple iPad Mini (7.9\")</item>
+        <item>Apple iPad Mini 2 (7.9\")</item>
+        <item>Apple iPad Mini 4 (7.9\")</item>
+        <item>Apple iPad Pro (9.7\")</item>
+        <item>Apple iPad Pro (10.5\")</item>
+        <item>Apple iPad Pro (12.9\")</item>
+        <item>Apple iPad Pro 3th Gen (11.0\")</item>
+        <item>Apple iPhone 3GS (3.5\")</item>
+        <item>Apple iPhone 4 (4, 4S) (3.5\")</item>
+        <item>Apple iPhone 5 (5c, 5s) (4.0\")</item>
+        <item>Apple iPhone 6 (4.7\")</item>
+        <item>Apple iPhone 6+ (5.5\")</item>
+        <item>Apple iPhone 6s (4.7\")</item>
+        <item>Apple iPhone 7 (4.7\")</item>
+        <item>Apple iPhone 7+ (5.5\")</item>
+        <item>Apple iPhone 8 (4.7\")</item>
+        <item>Apple iPhone 8+ (5.5\")</item>
+        <item>Apple iPhone X (5.8\")</item>
+        <item>Apple iPhone XR (6.1\")</item>
+        <item>Apple iPhone Xs (5.8\")</item>
+        <item>Apple iPhone Xs Max (6.5\")</item>
+    </string-array>
+
+    <string-array name="Android">
+        <item>Acer Iconia Tab A (10.1\")</item>
+        <item>Acer Picasso (11.6\")</item>
+        <item>Acer Switch 10 E (10.1\")</item>
+        <item>Ainol Novo 10 Hero (10.0\")</item>
+        <item>Ainol Novo 7 Crystal (7.0\")</item>
+        <item>Ainol Novo 9 Spark (9.7\")</item>
+        <item>Alcatel One Touch Idol Ultra (4.7\")</item>
+        <item>Alcatel One Touch Ultra 995 (4.3\")</item>
+        <item>Amazon Fire (7.0\")</item>
+        <item>Amazon Fire HD 10 (10.0\")</item>
+        <item>Amazon Fire HD 6 (6.0\")</item>
+        <item>Amazon Fire HD 8 (8.0\")</item>
+        <item>Amazon Kindle Fire 1st Gen (7.0\")</item>
+        <item>Amazon Kindle Fire HD 7" (7.0\")</item>
+        <item>Amazon Kindle Fire HD 8.9" (8.9\")</item>
+        <item>Asus Nexus 7 (2012) (7.0\")</item>
+        <item>Asus Nexus 7 (2013) (7.0\")</item>
+        <item>Asus Nexus 7 (7.0\")</item>
+        <item>Asus Transformer (10.1\")</item>
+        <item>Asus ZenPad 8.0 (8.0\")</item>
+        <item>Asus Zenfone 2 Laser ZE500KL (5.0\")</item>
+        <item>Asus Zenfone Max ZC550KL (5.5\")</item>
+        <item>Barnes and Noble Nook Tablet (7.0\")</item>
+        <item>BlackBerry BlackBerry Priv (5.4\")</item>
+        <item>BlackBerry Priv (5.4\")</item>
+        <item>Dell Venue (7.0\")</item>
+        <item>Google Pixel (5.0\")</item>
+        <item>Google Pixel C (10.2\")</item>
+        <item>Google Pixel XL (5.5\")</item>
+        <item>HP 7 Plus Tablet (7.0\")</item>
+        <item>HP 7 Voice Tab (6.9\")</item>
+        <item>HP Slate 7 (7.0\")</item>
+        <item>HP Slate 8 Plus Tablet (8.0\")</item>
+        <item>HP Slate7 VoiceTab (7.0\")</item>
+        <item>HTC Desire (3.7\")</item>
+        <item>HTC Desire HD (4.3\")</item>
+        <item>HTC Evo (4.3\")</item>
+        <item>HTC Nexus 9 (8.9\")</item>
+        <item>HTC One (4.7\")</item>
+        <item>HTC One M8 (5.0\")</item>
+        <item>HTC One M9 (5.0\")</item>
+        <item>Huawei Mat (6.0\")</item>
+        <item>Huawei Nexus 6p (5.7\")</item>
+        <item>Huawei P8 (5.2\")</item>
+        <item>Infocus M812i (5.5\")</item>
+        <item>LG G3 (5.5\")</item>
+        <item>LG G4 (5.5\")</item>
+        <item>LG GX F310L (5.5\")</item>
+        <item>LG Nexus 4 (4.7\")</item>
+        <item>LG Nexus 4 AR (4.7\")</item>
+        <item>LG Nexus 5X (5.2\")</item>
+        <item>LG Phoenix 2 (2.5\")</item>
+        <item>LG V10 (5.7\")</item>
+        <item>Lenovo K3 Note (5.5\")</item>
+        <item>Lenovo Vibe K4 Note (5.5\")</item>
+        <item>Lenovo Yoga 10 HD+ (10.1\")</item>
+        <item>Micromax Canvas 6 (5.5\")</item>
+        <item>Motorola Droid (3.7\")</item>
+        <item>Motorola Droid 3 and 4 (4.0\")</item>
+        <item>Motorola Droid Razr (4.3\")</item>
+        <item>Motorola Droid Razr Maxx (4.3\")</item>
+        <item>Motorola Droid Turbo (5.2\")</item>
+        <item>Motorola Moto E (4.3\")</item>
+        <item>Motorola Moto G (5.0\")</item>
+        <item>Motorola Moto G4 Plus (5.5\")</item>
+        <item>Motorola Moto X Style (5.7\")</item>
+        <item>Motorola Moto Z (5.5\")</item>
+        <item>Motorola Nexus 6 (6.0\")</item>
+        <item>OnePlus 2 (5.5\")</item>
+        <item>OnePlus One (5.5\")</item>
+        <item>OnePlus X (5.0\")</item>
+        <item>Oppo A37 (5.0\")</item>
+        <item>Oppo A53 (5.5\")</item>
+        <item>Oppo A59 (5.5\")</item>
+        <item>Oppo F1 (5.0\")</item>
+        <item>Oppo F1 Plus (5.5\")</item>
+        <item>Oppo R9 (5.5\")</item>
+        <item>Oppo R9 Plus (6.0\")</item>
+        <item>Panasonic Eluga Arc (4.7\")</item>
+        <item>Panasonic Eluga I3 (5.5\")</item>
+        <item>Panasonic T44 (4.0\")</item>
+        <item>Panasonic T50 (4.5\")</item>
+        <item>Philips Sapphire Life V787 (5.5\")</item>
+        <item>Philips Sapphire S616 (5.5\")</item>
+        <item>Samsung A5 (5.0\")</item>
+        <item>Samsung Galaxy J7 (5.5\")</item>
+        <item>Samsung Galaxy Nexus (4.6\")</item>
+        <item>Samsung Galaxy Note (5.3\")</item>
+        <item>Samsung Galaxy Note II (5.5\")</item>
+        <item>Samsung Galaxy Note Pro 12.2 (12.2\")</item>
+        <item>Samsung Galaxy Note4 (5.7\")</item>
+        <item>Samsung Galaxy Note5 (5.7\")</item>
+        <item>Samsung Galaxy S (4.0\")</item>
+        <item>Samsung Galaxy S Plus (4.0\")</item>
+        <item>Samsung Galaxy S5 (5.1\")</item>
+        <item>Samsung Galaxy S6 (5.1\")</item>
+        <item>Samsung Galaxy S6 Edge+ (5.7\")</item>
+        <item>Samsung Galaxy S7 (5.1\")</item>
+        <item>Samsung Galaxy S7 Edge (5.5\")</item>
+        <item>Samsung Galaxy S8 (5.8\")</item>
+        <item>Samsung Galaxy S8+ (6.2\")</item>
+        <item>Samsung Galaxy S9 (5.8\")</item>
+        <item>Samsung Galaxy S9+ (6.1\")</item>
+        <item>Samsung Galaxy S10e (5.8\")</item>
+        <item>Samsung Galaxy S10 (6.1\")</item>
+        <item>Samsung Galaxy S10 5G (6.7\")</item>
+        <item>Samsung Galaxy S10+ (6.4\")</item>
+        <item>Samsung Galaxy SII (4.3\")</item>
+        <item>Samsung Galaxy SIII (4.8\")</item>
+        <item>Samsung Galaxy SIV (5.0\")</item>
+        <item>Samsung Galaxy SV (5.1\")</item>
+        <item>Samsung Galaxy Tab 10.1 (10.1\")</item>
+        <item>Samsung Galaxy Tab 2 (7.7\")</item>
+        <item>Samsung Galaxy Tab 2 10.1 (10.1\")</item>
+        <item>Samsung Galaxy Tab S2 (9.7\")</item>
+        <item>Samsung Nexus S (4.0\")</item>
+        <item>Samsung Z3 (5.0\")</item>
+        <item>Sony Xperia C4 Dual (5.5\")</item>
+        <item>Sony Xperia E4 Dual (5.0\")</item>
+        <item>Sony Xperia M4 (5.0\")</item>
+        <item>Sony Xperia T2 Ultra Dual (6.0\")</item>
+        <item>Sony Xperia X (5.0\")</item>
+        <item>Sony Xperia Z (5.0\")</item>
+        <item>Sony Xperia Z1 (5.0\")</item>
+        <item>Sony Xperia Z3 (5.2\")</item>
+        <item>Sony Xperia Z3 Plus (5.2\")</item>
+        <item>Sony Xperia Z4 (10.1\")</item>
+        <item>Sony Xperia Z5 (5.2\")</item>
+        <item>Toshiba AT100 (10.1\")</item>
+        <item>Toshiba Encore 2 Write (10.1\")</item>
+        <item>Toshiba Excite Go (7.0\")</item>
+        <item>Toshiba Thrive (10.1\")</item>
+        <item>VIVO Y51L (5.0\")</item>
+        <item>Xiaomi Mi 4i (5.0\")</item>
+        <item>Xiaomi Mi Note (5.7\")</item>
+        <item>Xiaomi Redmi Note 3 (5.5\")</item>
+    </string-array>
+
+    <string-array name="Windows">
+        <item>Dell Venue 10 (10.1\")</item>
+        <item>FUJITSU LIFEBOOK U745 (14.0\")</item>
+        <item>FUJITSU STYLISTIC Q665 (11.6\")</item>
+        <item>FUJITSU STYLISTIC Q736 (13.3\")</item>
+        <item>Microsoft Lumia 950 (5.2\")</item>
+        <item>Microsoft Surface Pro (2017) (12.5\")</item>
+        <item>Microsoft Surface Pro 3 (12.0\")</item>
+        <item>Microsoft Surface Pro 4 (12.3\")</item>
+        <item>Nokia Lumia (710, 800) (3.7\")</item>
+        <item>Nokia Lumia 1020 (4.5\")</item>
+        <item>Nokia Lumia 520 (4.0\")</item>
+        <item>Nokia Lumia 620 (3.8\")</item>
+        <item>Nokia Lumia 720 (4.3\")</item>
+        <item>Nokia Lumia 900 (4.3\")</item>
+        <item>Nokia Lumia 920 (4.5\")</item>
+        <item>Nokia Lumia 925 (4.5\")</item>
+        <item>Panasonic Toughpad FZ-F1 (4.7\")</item>
+    </string-array>
+
+    <string-array name="BlackBerry">
+        <item>BlackBerry Classic Non Camera (3.5\")</item>
+        <item>BlackBerry Leap (5.0\")</item>
+        <item>BlackBerry Passport (4.5\")</item>
+        <item>BlackBerry PlayBook (7.0\")</item>
+        <item>BlackBerry Porsche Design P9982 (4.2\")</item>
+        <item>BlackBerry Q10 (3.1\")</item>
+        <item>BlackBerry Torch 9810 (3.2\")</item>
+        <item>BlackBerry Z10 (4.2\")</item>
+        <item>BlackBerry Z3 (5.0\")</item>
+    </string-array>
+
+    <string-array name="etc">
+        <item></item>
+    </string-array>
+
+</resources>
